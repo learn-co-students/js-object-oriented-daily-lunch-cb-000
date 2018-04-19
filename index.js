@@ -82,6 +82,11 @@ class Employer {
   }
 
   allMeals() {
+// Answer
+// return this.deliveries().map(function(delivery){
+//   return delivery.meal()
+// })
+
     return this.employees().reduce(function(total, employee) {
       return total.concat(employee.meals())
     }.bind(this), [])
@@ -89,6 +94,9 @@ class Employer {
   }
 
   meals() {
+
+// In the answer, they were able to use [...new Set(this.allMeals())], but it was not successful for me.
+
     let meals = this.allMeals()
     return meals.reduce(function(total, meal) {
       if(total.find(function(m) {
