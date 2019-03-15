@@ -22,18 +22,15 @@ class Neighborhood{
       )
     }
 
-
     customers(){
-      return this.deliveries().filter(
-        function(deliv) { return deliv.customer() }.bind(this)
-      )
+      return this.deliveries().map(function(d) { return d.customer() }.bind(this)).filter( onlyUnique );
     }
+
 
     meals(){
-      return store.deliveries.map(
-        function (item) { return item.meal() }
-      ).bind(this)
+      return this.deliveries().map(function(d) { return d.meal() }.bind(this)).filter( onlyUnique );
     }
+
 }
 
 
@@ -43,6 +40,20 @@ class Meal{
       this.title = title;
       this.price = price;
       store.meals.push(this);
+    }
+
+    deliveries(){
+      return store.deliveries.filter(
+        function(deliv){ return deliv.mealId === this.id}.bind(this)
+      )
+    }
+
+    customers(){
+      return this.deliveries().map(function(d) { return d.customer() }.bind(this))
+    }
+
+    static byPrice(){
+      return store.meals.sort(function(a, b){return b.price - a.price});
     }
 }
 
@@ -62,15 +73,13 @@ class Customer{
     }
 
     meals(){
-      return this.deliveries().filter(
-        function(deliv) { return deliv.meal() }.bind(this)
-      )
+      return this.deliveries().map(function(d) { return d.meal() }.bind(this))
     }
 
     totalSpent(){
-      return self.meals().reduce(function(sum, value) {
+      return this.meals().reduce(function(sum, value) {
         return sum + value.price;
-      }, 0);
+      }.bind(self), 0);
     }
 }
 
